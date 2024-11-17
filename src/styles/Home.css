@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+.container {
+    width: 300px;
+    text-align: center;
+}
+.view-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.toggle-button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+.toggle-button.active {
+    background-color: #007bff;
+    color: #ffffff;
+}
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 20px;
+}
+.day, .date {
+    padding: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+.mood-happy { background-color: #ffeb3b; }
+.mood-sad { background-color: #90caf9; }
+.mood-nostalgic { background-color: #ffcc80; }
+.mood-frustrated { background-color: #ef9a9a; }
+.mood-anxious { background-color: #a5d6a7; }
+.mood-angry { background-color: #e57373; }
+
+/* Modal styles */
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    width: 100%;
+}
+.settings-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+}

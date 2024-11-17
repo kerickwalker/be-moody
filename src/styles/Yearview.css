@@ -1,0 +1,23 @@
+.year-view {
+    text-align: center;
+    padding: 20px;
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.month-card {
+    padding: 20px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.month-card:hover {
+    transform: scale(1.05);
+}

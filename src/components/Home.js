@@ -1,69 +1,85 @@
-export default function Home() {
+import React, { useState } from 'react';
+import '../styles/Home.css';
+
+const Home = ({ selectedMonth, onToggleView }) => {
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [moodMap, setMoodMap] = useState({});
+
+    const openMoodSelector = (date) => {
+        setSelectedDate(date);
+        setIsModalOpen(true);
+    };
+
+    const closeMoodSelector = () => {
+        setIsModalOpen(false);
+    };
+
+    const setMood = (mood) => {
+        if (selectedDate !== null) {
+            setMoodMap((prev) => ({
+                ...prev,
+                [selectedDate]: mood,
+            }));
+        }
+        closeMoodSelector();
+    };
+
+    const logEntry = () => {
+        alert('Log a journal entry (functionality not implemented)');
+    };
+
     return (
-    <div class="container">
-        <div class="view-toggle">
-            <button id="monthView" class="toggle-button active">Month</button>
-            <button id="yearView" class="toggle-button">Year</button>
-        </div>
-        <h2>November 6, 2024</h2>
-        
-        <div class="calendar">
-            <div class="day">S</div>
-            <div class="day">M</div>
-            <div class="day">T</div>
-            <div class="day">W</div>
-            <div class="day">T</div>
-            <div class="day">F</div>
-            <div class="day">S</div>
-
-            <div class="date" onclick="openMoodSelector(this)">1</div>
-            <div class="date" onclick="openMoodSelector(this)">2</div>
-            <div class="date mood-sad" onclick="openMoodSelector(this)">3</div>
-            <div class="date mood-sad" onclick="openMoodSelector(this)">4</div>
-            <div class="date mood-happy" onclick="openMoodSelector(this)">5</div>
-            <div class="date mood-nostalgic" onclick="openMoodSelector(this)">6</div>
-            <div class="date" onclick="openMoodSelector(this)">7</div>
-            <div class="date" onclick="openMoodSelector(this)">8</div>
-            <div class="date" onclick="openMoodSelector(this)">9</div>
-            <div class="date" onclick="openMoodSelector(this)">10</div>
-            <div class="date" onclick="openMoodSelector(this)">11</div>
-            <div class="date" onclick="openMoodSelector(this)">12</div>
-            <div class="date" onclick="openMoodSelector(this)">13</div>
-            <div class="date" onclick="openMoodSelector(this)">14</div>
-            <div class="date" onclick="openMoodSelector(this)">15</div>
-            <div class="date" onclick="openMoodSelector(this)">16</div>
-            <div class="date" onclick="openMoodSelector(this)">17</div>
-            <div class="date" onclick="openMoodSelector(this)">18</div>
-            <div class="date" onclick="openMoodSelector(this)">19</div>
-            <div class="date" onclick="openMoodSelector(this)">20</div>
-            <div class="date" onclick="openMoodSelector(this)">21</div>
-            <div class="date" onclick="openMoodSelector(this)">22</div>
-            <div class="date" onclick="openMoodSelector(this)">23</div>
-            <div class="date" onclick="openMoodSelector(this)">24</div>
-            <div class="date" onclick="openMoodSelector(this)">25</div>
-            <div class="date" onclick="openMoodSelector(this)">26</div>
-            <div class="date" onclick="openMoodSelector(this)">27</div>
-            <div class="date" onclick="openMoodSelector(this)">28</div>
-            <div class="date" onclick="openMoodSelector(this)">29</div>
-            <div class="date" onclick="openMoodSelector(this)">30</div>
-        </div>
-        
-        <div id="moodModal" class="modal">
-            <div class="modal-content">
-                <h3>Select a Mood</h3>
-                <ul>
-                    <li onclick="setMood('happy')">Happy</li>
-                    <li onclick="setMood('sad')">Sad</li>
-                    <li onclick="setMood('nostalgic')">Nostalgic</li>
-                    <li onclick="setMood('frustrated')">Frustrated</li>
-                    <li onclick="setMood('anxious')">Anxious</li>
-                    <li onclick="setMood('angry')">Angry</li>
-                </ul>
-                <button onclick="logEntry()">Log a journal entry</button>
+        <div>
+            <div className="header">
+                <button className="toggle-view-button" onClick={onToggleView}>
+                    {`Switch to ${selectedMonth ? 'Yearly' : 'Monthly'} View`}
+                </button>
+                <h2>{`Month: ${selectedMonth}`}</h2>
             </div>
+
+            <div className="calendar">
+                <div className="day">S</div>
+                <div className="day">M</div>
+                <div className="day">T</div>
+                <div className="day">W</div>
+                <div className="day">T</div>
+                <div className="day">F</div>
+                <div className="day">S</div>
+
+                {[...Array(30).keys()].map((i) => {
+                    const date = i + 1;
+                    const moodClass = moodMap[date] ? `mood-${moodMap[date]}` : '';
+                    return (
+                        <div
+                            key={date}
+                            className={`date ${moodClass}`}
+                            onClick={() => openMoodSelector(date)}
+                        >
+                            {date}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {isModalOpen && (
+                <div id="moodModal" className="modal" onClick={closeMoodSelector}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Select a Mood</h3>
+                        <ul>
+                            <li onClick={() => setMood('happy')}>Happy</li>
+                            <li onClick={() => setMood('sad')}>Sad</li>
+                            <li onClick={() => setMood('nostalgic')}>Nostalgic</li>
+                            <li onClick={() => setMood('frustrated')}>Frustrated</li>
+                            <li onClick={() => setMood('anxious')}>Anxious</li>
+                            <li onClick={() => setMood('angry')}>Angry</li>
+                        </ul>
+                        <button onClick={logEntry}>Log a journal entry</button>
+                    </div>
+                </div>
+            )}
         </div>
-    </div>
-
-
     );
-  }
+};
+
+export default Home;
