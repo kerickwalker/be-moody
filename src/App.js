@@ -1,29 +1,36 @@
-import React, { useState } from 'react';
-import Home from './components/Home';
-import YearView from './components/Yearview';
+import React, { useState } from "react";
+import Home from "./components/Home";
+import YearView from "./components/Yearview";
+import Entry from "./components/Entry";
+import Login from "./components/Login";
 
 const App = () => {
-    const [currentView, setCurrentView] = useState('month'); // Default to 'month'
-    const [selectedMonth, setSelectedMonth] = useState(null); // Holds the selected month
+    const [currentPage, setCurrentPage] = useState("login"); // Start with 'login'
 
-    const toggleView = () => {
-        setCurrentView((prevView) => (prevView === 'month' ? 'year' : 'month'));
+    // Navigation handlers
+    const navigateToHome = () => {
+        setCurrentPage("home");
     };
 
-    const handleMonthClick = (month) => {
-        setSelectedMonth(month);
-        setCurrentView('month');
+    const navigateToEntry = () => {
+        setCurrentPage("entry");
+    };
+
+    const navigateToYearView = () => {
+        setCurrentPage("year");
     };
 
     return (
         <div>
-            {currentView === 'year' && <YearView onMonthClick={handleMonthClick} />}
-            {currentView === 'month' && (
+            {currentPage === "login" && <Login navigateToHome={navigateToHome} />}
+            {currentPage === "home" && (
                 <Home 
-                    selectedMonth={selectedMonth || new Date().getMonth() + 1} 
-                    onToggleView={toggleView} 
+                    selectedMonth={new Date().getMonth() + 1} 
+                    onToggleView={navigateToYearView} 
                 />
             )}
+            {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
+            {currentPage === "entry" && <Entry />}
         </div>
     );
 };

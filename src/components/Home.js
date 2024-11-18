@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
 
+// import { useNavigate } from "react-router-dom";
+
 const Home = ({ selectedMonth, onToggleView }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
+    // const navigate = useNavigate();
 
     const openMoodSelector = (date) => {
         setSelectedDate(date);
@@ -26,6 +29,8 @@ const Home = ({ selectedMonth, onToggleView }) => {
     };
 
     const logEntry = () => {
+        // navigate("./components/Entry"); // Navigate to Entry page
+        // window.location.href = "src/components/Entry.js"; // This opens the /entry page.
         alert('Log a journal entry (functionality not implemented)');
     };
 
