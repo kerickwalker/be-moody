@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
 
-const Home = ({ selectedMonth, onToggleView, navigateToEntry }) => {
+const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings }) => { // Change prop name here
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
@@ -108,6 +108,10 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry }) => {
                     </div>
                 </div>
             )}
+            {/* Settings Icon */}
+            <button className="settings-icon" onClick={navigateToSettings}>
+                ⚙️
+            </button>
         </div>
     );
 };
