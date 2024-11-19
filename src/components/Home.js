@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
 
-// import { useNavigate } from "react-router-dom";
-
-const Home = ({ selectedMonth, onToggleView }) => {
+const Home = ({ selectedMonth, onToggleView, navigateToEntry }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
-    // const navigate = useNavigate();
     const [selectedMood, setSelectedMood] = useState(null);
 
     const openMoodSelector = (date) => {
@@ -31,9 +28,11 @@ const Home = ({ selectedMonth, onToggleView }) => {
     };
 
     const logEntry = () => {
-        // navigate("./components/Entry"); // Navigate to Entry page
-        // window.location.href = "src/components/Entry.js"; // This opens the /entry page.
-        alert('Log a journal entry (functionality not implemented)');
+        if (selectedMood) {
+            navigateToEntry(); // Navigate to Entry page
+        } else {
+            alert('Please select a mood before logging a journal entry.');
+        }
     };
 
     return (
@@ -101,7 +100,7 @@ const Home = ({ selectedMonth, onToggleView }) => {
                         </ul>
                         <button
                             className="log-entry-button"
-                            onClick={logEntry}
+                            onClick={navigateToEntry}
                             disabled={!selectedMood} // Only enable if mood is selected
                         >
                             <span className="log-entry-icon">📖</span> Log a journal entry

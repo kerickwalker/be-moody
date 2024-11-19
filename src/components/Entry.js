@@ -35,6 +35,16 @@ const Entry = () => {
     // You can replace this with actual saving logic (e.g., API call)
   };
 
+  const Entry = ({ navigateToHome }) => {
+    return (
+        <div>
+            <button onClick={navigateToHome}>Back to Home</button>
+            <h1>Journal Entry Page</h1>
+            {/* Add your journal entry content here */}
+        </div>
+    );
+};
+
   return (
     <div style={styles.container}>
       <h1 style={styles.date}>{date}</h1>

@@ -27,10 +27,13 @@ const App = () => {
                 <Home 
                     selectedMonth={new Date().getMonth() + 1} 
                     onToggleView={navigateToYearView} 
+                    navigateToEntry={navigateToEntry} // Pass navigation function
                 />
             )}
             {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
-            {currentPage === "entry" && <Entry />}
+            {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />} {/* Add back navigation */}
+
+            
         </div>
     );
 };
