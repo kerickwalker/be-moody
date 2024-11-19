@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import YearView from "./components/Yearview";
 import Entry from "./components/Entry";
 import Login from "./components/Login";
+import Settings from "./components/Settings";
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState("login"); // Start with 'login'
@@ -19,6 +20,9 @@ const App = () => {
     const navigateToYearView = () => {
         setCurrentPage("year");
     };
+    const navigateToSettings = () => {
+        setCurrentPage("settings");
+    };
 
     return (
         <div>
@@ -27,7 +31,7 @@ const App = () => {
                 <Home 
                     selectedMonth={new Date().getMonth() + 1} 
                     onToggleView={navigateToYearView} 
-                    navigateToEntry={navigateToEntry} // Pass navigation function
+                    onNavigateToSettings={navigateToSettings}
                 />
             )}
             {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
