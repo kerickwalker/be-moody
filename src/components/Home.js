@@ -8,6 +8,7 @@ const Home = ({ selectedMonth, onToggleView }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
     // const navigate = useNavigate();
+    const [selectedMood, setSelectedMood] = useState(null);
 
     const openMoodSelector = (date) => {
         setSelectedDate(date);
@@ -19,6 +20,7 @@ const Home = ({ selectedMonth, onToggleView }) => {
     };
 
     const setMood = (mood) => {
+        setSelectedMood(mood);
         if (selectedDate !== null) {
             setMoodMap((prev) => ({
                 ...prev,
@@ -37,10 +39,16 @@ const Home = ({ selectedMonth, onToggleView }) => {
     return (
         <div>
             <div className="header">
-                <button className="toggle-view-button" onClick={onToggleView}>
-                    {`Switch to ${selectedMonth ? 'Yearly' : 'Monthly'} View`}
-                </button>
-                <h2>{`Month: ${selectedMonth}`}</h2>
+                {/* Yearly View Toggle Button */}
+                <div className="view-toggle">
+                    <button
+                        className={`toggle-button active`}
+                        onClick={() => onToggleView('year')}
+                    >
+                        Yearly View
+                    </button>
+                </div>
+                <h2>{`Month: ${selectedMonth || 'Select a month'}`}</h2>
             </div>
 
             <div className="calendar">
@@ -52,7 +60,7 @@ const Home = ({ selectedMonth, onToggleView }) => {
                 <div className="day">F</div>
                 <div className="day">S</div>
 
-                {[...Array(30).keys()].map((i) => {
+                {[...Array(31).keys()].map((i) => {
                     const date = i + 1;
                     const moodClass = moodMap[date] ? `mood-${moodMap[date]}` : '';
                     return (
@@ -72,14 +80,32 @@ const Home = ({ selectedMonth, onToggleView }) => {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h3>Select a Mood</h3>
                         <ul>
-                            <li onClick={() => setMood('happy')}>Happy</li>
-                            <li onClick={() => setMood('sad')}>Sad</li>
-                            <li onClick={() => setMood('nostalgic')}>Nostalgic</li>
-                            <li onClick={() => setMood('frustrated')}>Frustrated</li>
-                            <li onClick={() => setMood('anxious')}>Anxious</li>
-                            <li onClick={() => setMood('angry')}>Angry</li>
+                            <li onClick={() => setMood('happy')}>
+                                <span className="mood-color-box mood-happy"></span> Happy
+                            </li>
+                            <li onClick={() => setMood('sad')}>
+                                <span className="mood-color-box mood-sad"></span> Sad
+                            </li>
+                            <li onClick={() => setMood('nostalgic')}>
+                                <span className="mood-color-box mood-nostalgic"></span> Nostalgic
+                            </li>
+                            <li onClick={() => setMood('frustrated')}>
+                                <span className="mood-color-box mood-frustrated"></span> Frustrated
+                            </li>
+                            <li onClick={() => setMood('anxious')}>
+                                <span className="mood-color-box mood-anxious"></span> Anxious
+                            </li>
+                            <li onClick={() => setMood('angry')}>
+                                <span className="mood-color-box mood-angry"></span> Angry
+                            </li>
                         </ul>
-                        <button onClick={logEntry}>Log a journal entry</button>
+                        <button
+                            className="log-entry-button"
+                            onClick={logEntry}
+                            disabled={!selectedMood} // Only enable if mood is selected
+                        >
+                            <span className="log-entry-icon">📖</span> Log a journal entry
+                        </button>
                     </div>
                 </div>
             )}

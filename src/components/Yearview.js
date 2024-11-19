@@ -9,6 +9,7 @@ const YearView = ({ onMonthClick }) => {
 
     return (
         <div className="year-view">
+            
             <h1>Year View</h1>
             <div className="months-grid">
                 {months.map((month, index) => (
