@@ -31,7 +31,7 @@ const App = () => {
                 />
             )}
             {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
-            {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />} {/* Add back navigation */}
+            {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />}
 
             
         </div>

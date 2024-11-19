@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import "../styles/Entry.css";
 
-const Entry = () => {
+const Entry = ({ navigateToHome }) => {
   const [entryText, setEntryText] = useState("");
   const [embeddedMusic, setEmbeddedMusic] = useState(null);
   const [attachedImages, setAttachedImages] = useState([]);
@@ -29,55 +30,54 @@ const Entry = () => {
       music: embeddedMusic,
       images: attachedImages,
     };
-
+  
     console.log("Saved Journal Entry:", journalEntry);
-    alert("Journal entry saved!");
-    // You can replace this with actual saving logic (e.g., API call)
+    alert("Journal entry saved!"); // Popup alert
+    navigateToHome(); // Navigate back to Home
   };
 
-  const Entry = ({ navigateToHome }) => {
-    return (
-        <div>
-            <button onClick={navigateToHome}>Back to Home</button>
-            <h1>Journal Entry Page</h1>
-            {/* Add your journal entry content here */}
-        </div>
-    );
-};
-
   return (
-    <div style={styles.container}>
-      <h1 style={styles.date}>{date}</h1>
+    <div className="entry-container">
+      {/* Back Button */}
+      <button onClick={navigateToHome} className="entry-back-button">
+        ⬅ Back to Home
+      </button>
+
+      <h1 className="entry-date">{date}</h1>
       <textarea
-        style={styles.textArea}
+        className="entry-text-area"
         value={entryText}
         onChange={handleTextChange}
         placeholder="Write your journal entry here..."
       />
-      <div style={styles.buttons}>
-        <button onClick={handleEmbedMusic} style={styles.button}>
+      <div className="entry-buttons">
+        <button onClick={handleEmbedMusic} className="entry-button">
           Embed Music
         </button>
-        <label style={styles.button}>
+        <label className="entry-button">
           Attach Images
           <input
             type="file"
             accept="image/*"
             multiple
             onChange={handleAttachImage}
-            style={styles.fileInput}
+            className="entry-file-input"
           />
         </label>
-        <button onClick={handleSave} style={styles.doneButton}>
+        <button
+          onClick={handleSave}
+          className="entry-done-button"
+        //   disabled={!entryText.trim()} // Disable if no text entered
+        >
           Done
         </button>
       </div>
-      <div style={styles.preview}>
+      <div className="entry-preview">
         {embeddedMusic && (
           <iframe
             title="Embedded Music"
             src={embeddedMusic}
-            style={styles.musicPlayer}
+            className="entry-music-player"
           ></iframe>
         )}
         {attachedImages.map((image, index) => (
@@ -85,71 +85,12 @@ const Entry = () => {
             key={index}
             src={URL.createObjectURL(image)}
             alt={`Attachment ${index + 1}`}
-            style={styles.image}
+            className="entry-image"
           />
         ))}
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-  },
-  date: {
-    textAlign: "center",
-    marginBottom: "20px",
-  },
-  textArea: {
-    width: "100%",
-    height: "200px",
-    padding: "10px",
-    fontSize: "16px",
-    marginBottom: "20px",
-  },
-  buttons: {
-    display: "flex",
-    gap: "10px",
-    marginBottom: "20px",
-  },
-  button: {
-    padding: "10px 15px",
-    fontSize: "14px",
-    cursor: "pointer",
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-  },
-  doneButton: {
-    padding: "10px 15px",
-    fontSize: "14px",
-    cursor: "pointer",
-    backgroundColor: "#28a745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-  },
-  fileInput: {
-    display: "none",
-  },
-  preview: {
-    marginTop: "20px",
-  },
-  musicPlayer: {
-    width: "100%",
-    height: "80px",
-    marginBottom: "10px",
-  },
-  image: {
-    width: "100px",
-    height: "100px",
-    marginRight: "10px",
-    borderRadius: "5px",
-    objectFit: "cover",
-  },
 };
 
 export default Entry;
