@@ -1,93 +1,109 @@
-document.getElementById("openSettings").addEventListener("click", function () {
-    const settingsPage = document.getElementById("settingsPage");
+import React, { useState, useEffect } from 'react';
 
-    // Create settings page content dynamically
-    settingsPage.innerHTML = `
-        <div class="settings-header">
-            <button id="backButton" class="back-button">←</button>
-            <h2>Settings</h2>
-        </div>
-        <div class="settings-content">
-            <label>Name</label>
-            <input type="text" placeholder="Enter your name" id="nameField">
-            <label>Email</label>
-            <input type="email" placeholder="Enter your email" id="emailField">
-            <label>Birthday</label>
-            <input type="date" id="birthdayField">
-            <label>Emotion Color Settings</label>
-            <select id="emotionColorSettings">
-                <option value="sad">Sad</option>
-                <option value="happy">Happy</option>
-                <option value="mad">Mad</option>
-                <option value="addEmotion">+ Add Emotion</option>
-            </select>
-            <div id="colorPickerContainer" class="hidden">
-                <label>Pick a Color for the Emotion</label>
-                <input type="color" id="colorPicker">
-                <button id="saveColor">Save Color</button>
-            </div>
-        </div>
-        <button id="logoutButton" class="logout-button">Logout</button>
-    `;
+const Settings = () => {
+    const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+    const [emotionColors, setEmotionColors] = useState(
+        JSON.parse(localStorage.getItem("emotionColors")) || {}
+    );
+    const [selectedEmotion, setSelectedEmotion] = useState('');
+    const [newEmotion, setNewEmotion] = useState('');
+    const [color, setColor] = useState('#000000');
 
-    // Show the settings page
-    settingsPage.classList.remove("hidden");
+    useEffect(() => {
+        // Save the emotion colors to localStorage whenever it changes
+        localStorage.setItem("emotionColors", JSON.stringify(emotionColors));
+    }, [emotionColors]);
 
-    // Back button functionality
-    document.getElementById("backButton").addEventListener("click", function () {
-        settingsPage.classList.add("hidden");
-    });
+    const handleBackClick = () => {
+        setIsSettingsVisible(false);
+    };
 
-    // Logout button functionality
-    document.getElementById("logoutButton").addEventListener("click", function () {
+    const handleLogout = () => {
         alert("Logged out successfully!");
-    });
+    };
 
-    // Emotion color picker functionality
-    document.getElementById("emotionColorSettings").addEventListener("change", function (event) {
+    const handleEmotionChange = (event) => {
         const selectedValue = event.target.value;
-        const colorPickerContainer = document.getElementById("colorPickerContainer");
+        setSelectedEmotion(selectedValue);
 
-        if (selectedValue === "addEmotion") {
+        if (selectedValue === 'addEmotion') {
             const newEmotion = prompt("Enter new emotion:");
             if (newEmotion) {
-                const newOption = document.createElement("option");
-                newOption.value = newEmotion.toLowerCase();
-                newOption.textContent = newEmotion;
-                this.appendChild(newOption);
-                this.value = newEmotion.toLowerCase();
-                colorPickerContainer.classList.remove("hidden");
+                const newEmotionValue = newEmotion.toLowerCase();
+                setEmotionColors((prevColors) => ({
+                    ...prevColors,
+                    [newEmotionValue]: '#000000', // Default color for new emotion
+                }));
+                setSelectedEmotion(newEmotionValue);
             }
-        } else {
-            colorPickerContainer.classList.add("hidden");
         }
-    });
+    };
 
-    // Save the chosen color for the new emotion
-    document.getElementById("saveColor").addEventListener("click", function () {
-        const emotionColorSettings = document.getElementById("emotionColorSettings");
-        const selectedEmotion = emotionColorSettings.value;
-        const chosenColor = document.getElementById("colorPicker").value;
+    const handleColorChange = (event) => {
+        setColor(event.target.value);
+    };
 
-        if (selectedEmotion && chosenColor) {
-            // Save the color setting (could use localStorage or any other method)
-            const emotionColors = JSON.parse(localStorage.getItem("emotionColors") || "{}");
-            emotionColors[selectedEmotion] = chosenColor;
-            localStorage.setItem("emotionColors", JSON.stringify(emotionColors));
-
-            alert(`Color for ${selectedEmotion} saved as ${chosenColor}!`);
-            document.getElementById("colorPickerContainer").classList.add("hidden");
+    const handleSaveColor = () => {
+        if (selectedEmotion && color) {
+            setEmotionColors((prevColors) => ({
+                ...prevColors,
+                [selectedEmotion]: color,
+            }));
+            alert(`Color for ${selectedEmotion} saved as ${color}!`);
         }
-    });
-});
+    };
 
-// Retrieve and apply the saved colors on the home page
-document.addEventListener("DOMContentLoaded", function () {
-    const emotionColors = JSON.parse(localStorage.getItem("emotionColors") || "{}");
+    const handleOpenSettings = () => {
+        setIsSettingsVisible(true);
+    };
 
-    for (const [emotion, color] of Object.entries(emotionColors)) {
-        console.log(`Emotion: ${emotion}, Color: ${color}`); // Replace this with your logic for applying the colors to the home page
-    }
-});
+    return (
+        <div>
+            <button onClick={handleOpenSettings} id="openSettings">
+                Open Settings
+            </button>
 
+            {isSettingsVisible && (
+                <div id="settingsPage">
+                    <div className="settings-header">
+                        <button onClick={handleBackClick} className="back-button">←</button>
+                        <h2>Settings</h2>
+                    </div>
+                    <div className="settings-content">
+                        <label>Name</label>
+                        <input type="text" placeholder="Enter your name" id="nameField" />
+                        <label>Email</label>
+                        <input type="email" placeholder="Enter your email" id="emailField" />
+                        <label>Birthday</label>
+                        <input type="date" id="birthdayField" />
+                        <label>Emotion Color Settings</label>
+                        <select
+                            id="emotionColorSettings"
+                            value={selectedEmotion}
+                            onChange={handleEmotionChange}
+                        >
+                            <option value="sad">Sad</option>
+                            <option value="happy">Happy</option>
+                            <option value="mad">Mad</option>
+                            <option value="addEmotion">+ Add Emotion</option>
+                        </select>
+                        {selectedEmotion === 'addEmotion' && (
+                            <div id="colorPickerContainer">
+                                <label>Pick a Color for the Emotion</label>
+                                <input type="color" id="colorPicker" value={color} onChange={handleColorChange} />
+                                <button id="saveColor" onClick={handleSaveColor}>
+                                    Save Color
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <button onClick={handleLogout} id="logoutButton" className="logout-button">
+                        Logout
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
 
+export default Settings;

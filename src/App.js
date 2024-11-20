@@ -29,13 +29,15 @@ const App = () => {
             {currentPage === "login" && <Login navigateToHome={navigateToHome} />}
             {currentPage === "home" && (
                 <Home 
-                    selectedMonth={new Date().getMonth() + 1} 
-                    onToggleView={navigateToYearView} 
-                    onNavigateToSettings={navigateToSettings}
+                selectedMonth={new Date().getMonth() + 1} 
+                onToggleView={navigateToYearView} 
+                navigateToEntry={navigateToEntry} 
+                navigateToSettings={navigateToSettings} // Correctly passed
                 />
             )}
             {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
-            {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />}
+            {currentPage === "settings" && <Settings/>}
+            {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />} {/* Add back navigation */}
 
             
         </div>
