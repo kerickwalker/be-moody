@@ -7,6 +7,15 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     const [moodMap, setMoodMap] = useState({});
     const [selectedMood, setSelectedMood] = useState(null);
 
+    const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate();
+
+    const firstDayOfWeek = new Date(2024, selectedMonth, 1).getDay();
+
+    const calendarDays = [
+        ...Array(firstDayOfWeek).fill(null),
+        ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+    ];
+
     const openMoodSelector = (date) => {
         setSelectedDate(date);
         setIsModalOpen(true);
@@ -43,7 +52,7 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         Yearly View
                     </button>
                 </div>
-                <h2>{`Month: ${selectedMonth}`}</h2>
+                <h2>{`Month: ${selectedMonth + 1}`}</h2>
             </div>
 
             <div className="calendar">
@@ -55,16 +64,15 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 <div className="day">F</div>
                 <div className="day">S</div>
 
-                {[...Array(31).keys()].map((i) => {
-                    const date = i + 1;
-                    const moodClass = moodMap[date] ? `mood-${moodMap[date]}` : '';
+                {calendarDays.map((day, index) => {
+                    const moodClass = day && moodMap[day] ? `mood-${moodMap[day]}` : '';
                     return (
                         <div
-                            key={date}
-                            className={`date ${moodClass}`}
-                            onClick={() => openMoodSelector(date)}
+                            key={index}
+                            className={`date ${moodClass} ${day ? '' : 'empty'}`}
+                            onClick={day ? () => openMoodSelector(day) : undefined}
                         >
-                            {date}
+                            {day}
                         </div>
                     );
                 })}

@@ -7,7 +7,7 @@ import Settings from "./components/Settings";
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState("login"); // Start with 'login'
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
 
     // Navigation handlers
     const navigateToHome = () => {
@@ -26,7 +26,7 @@ const App = () => {
     };
 
     const handleMonthClick = (monthIndex) => {
-        setSelectedMonth(monthIndex + 1);
+        setSelectedMonth(monthIndex);
         setCurrentPage("home");
     };
 
