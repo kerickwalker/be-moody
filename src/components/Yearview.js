@@ -16,7 +16,7 @@ const YearView = ({ onMonthClick }) => {
                     <div
                         key={index}
                         className="month-card"
-                        onClick={() => onMonthClick(index + 1)} // Pass the month index (1-based) to the parent
+                        onClick={() => onMonthClick(index)}
                     >
                         {month}
                     </div>

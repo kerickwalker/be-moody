@@ -43,7 +43,7 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         Yearly View
                     </button>
                 </div>
-                <h2>{`Month: ${selectedMonth || 'Select a month'}`}</h2>
+                <h2>{`Month: ${selectedMonth}`}</h2>
             </div>
 
             <div className="calendar">

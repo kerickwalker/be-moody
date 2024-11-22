@@ -7,6 +7,7 @@ import Settings from "./components/Settings";
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState("login"); // Start with 'login'
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
 
     // Navigation handlers
     const navigateToHome = () => {
@@ -24,18 +25,23 @@ const App = () => {
         setCurrentPage("settings");
     };
 
+    const handleMonthClick = (monthIndex) => {
+        setSelectedMonth(monthIndex + 1);
+        setCurrentPage("home");
+    };
+
     return (
         <div>
             {currentPage === "login" && <Login navigateToHome={navigateToHome} />}
             {currentPage === "home" && (
                 <Home 
-                selectedMonth={new Date().getMonth() + 1} 
+                selectedMonth={selectedMonth} 
                 onToggleView={navigateToYearView} 
                 navigateToEntry={navigateToEntry} 
                 navigateToSettings={navigateToSettings} // Correctly passed
                 />
             )}
-            {currentPage === "year" && <YearView onMonthClick={() => setCurrentPage("home")} />}
+            {currentPage === "year" && <YearView onMonthClick={handleMonthClick} />}
             {currentPage === "settings" && <Settings/>}
             {currentPage === "entry" && <Entry navigateToHome={navigateToHome} />} {/* Add back navigation */}
 
