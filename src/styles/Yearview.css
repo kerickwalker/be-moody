@@ -1,23 +1,44 @@
 .year-view {
     text-align: center;
-    padding: 20px;
 }
 
 .months-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 }
 
 .month-card {
-    padding: 20px;
-    background: #f0f0f0;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f9f9f9;
     cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.2s;
 }
 
-.month-card:hover {
-    transform: scale(1.05);
+.mini-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-top: 10px;
 }
+
+.mini-calendar-day {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.mini-calendar-day.empty {
+    background-color: transparent;
+}
+
+.mood-happy { background-color: #ffeb3b; }
+.mood-sad { background-color: #90caf9; }
+.mood-nostalgic { background-color: #ffcc80; }
+.mood-frustrated { background-color: #ef9a9a; }
+.mood-anxious { background-color: #a5d6a7; }
+.mood-angry { background-color: #e57373; }

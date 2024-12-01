@@ -21,10 +21,12 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         const storedEntries = JSON.parse(localStorage.getItem('journalEntries')) || [];
         setJournalEntries(storedEntries);
 
-        // Populate moodMap based on stored entries
+        // Populate moodMap with keys including both month and day
         const moodData = storedEntries.reduce((acc, entry) => {
             if (entry.date && entry.mood) {
-                acc[parseInt(entry.date.split('/')[1])] = entry.mood; // Assuming MM/DD/YYYY format
+                const [month, day] = entry.date.split('/').map(Number); // MM/DD/YYYY format
+                if (!acc[month]) acc[month] = {}; // Initialize month if not present
+                acc[month][day] = entry.mood; // Store mood for specific day
             }
             return acc;
         }, {});
@@ -45,21 +47,23 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         setSelectedMood(mood);
 
         if (selectedDate !== null) {
-            // Update moodMap
             setMoodMap((prev) => ({
                 ...prev,
-                [selectedDate]: mood,
+                [selectedMonth + 1]: {
+                    ...prev[selectedMonth + 1],
+                    [selectedDate]: mood,
+                },
             }));
 
             // Update or add journal entry
-            const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // Assuming MM/DD/YYYY format
+            const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // MM/DD/YYYY format
             const updatedEntries = [...journalEntries];
             const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
 
             if (existingEntryIndex !== -1) {
-                updatedEntries[existingEntryIndex].mood = mood; // Update mood if entry exists
+                updatedEntries[existingEntryIndex].mood = mood;
             } else {
-                updatedEntries.push({ date: dateStr, mood }); // Add new entry if not found
+                updatedEntries.push({ date: dateStr, mood });
             }
 
             setJournalEntries(updatedEntries);
@@ -97,7 +101,9 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 <div className="day">S</div>
 
                 {calendarDays.map((day, index) => {
-                    const moodClass = day && moodMap[day] ? `mood-${moodMap[day]}` : '';
+                    const moodClass = day && moodMap[selectedMonth + 1]?.[day]
+                        ? `mood-${moodMap[selectedMonth + 1][day]}`
+                        : '';
                     return (
                         <div
                             key={index}
