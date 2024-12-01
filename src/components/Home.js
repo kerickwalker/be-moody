@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
 
-const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings }) => { // Change prop name here
+const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
     const [selectedMood, setSelectedMood] = useState(null);
+    const [journalEntries, setJournalEntries] = useState([]);
 
     const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate();
-
     const firstDayOfWeek = new Date(2024, selectedMonth, 1).getDay();
 
     const calendarDays = [
         ...Array(firstDayOfWeek).fill(null),
         ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
     ];
+
+    useEffect(() => {
+        // Load journal entries from localStorage
+        const storedEntries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+        setJournalEntries(storedEntries);
+
+        // Populate moodMap based on stored entries
+        const moodData = storedEntries.reduce((acc, entry) => {
+            if (entry.date && entry.mood) {
+                acc[parseInt(entry.date.split('/')[1])] = entry.mood; // Assuming MM/DD/YYYY format
+            }
+            return acc;
+        }, {});
+
+        setMoodMap(moodData);
+    }, [selectedMonth]);
 
     const openMoodSelector = (date) => {
         setSelectedDate(date);
@@ -27,23 +43,39 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
 
     const setMood = (mood) => {
         setSelectedMood(mood);
+
         if (selectedDate !== null) {
+            // Update moodMap
             setMoodMap((prev) => ({
                 ...prev,
                 [selectedDate]: mood,
             }));
+
+            // Update or add journal entry
+            const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // Assuming MM/DD/YYYY format
+            const updatedEntries = [...journalEntries];
+            const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
+
+            if (existingEntryIndex !== -1) {
+                updatedEntries[existingEntryIndex].mood = mood; // Update mood if entry exists
+            } else {
+                updatedEntries.push({ date: dateStr, mood }); // Add new entry if not found
+            }
+
+            setJournalEntries(updatedEntries);
+            localStorage.setItem('journalEntries', JSON.stringify(updatedEntries)); // Save to localStorage
         }
+
         closeMoodSelector();
     };
 
     const logEntry = () => {
-        navigateToEntry()
+        navigateToEntry();
     };
 
     return (
         <div>
             <div className="header">
-                {/* Yearly View Toggle Button */}
                 <div className="view-toggle">
                     <button
                         className={`toggle-button active`}
@@ -105,14 +137,14 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         <button
                             className="log-entry-button"
                             onClick={logEntry}
-                            disabled={!selectedMood} // Only enable if mood is selected
+                            disabled={!selectedMood}
                         >
                             <span className="log-entry-icon">📖</span> Log a journal entry
                         </button>
                     </div>
                 </div>
             )}
-            {/* Settings Icon */}
+
             <button className="settings-icon" onClick={navigateToSettings}>
                 ⚙️
             </button>
