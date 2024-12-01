@@ -43,9 +43,10 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         setIsModalOpen(false);
     };
 
+
     const setMood = (mood) => {
         setSelectedMood(mood);
-
+    
         if (selectedDate !== null) {
             setMoodMap((prev) => ({
                 ...prev,
@@ -54,24 +55,25 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                     [selectedDate]: mood,
                 },
             }));
-
+    
             // Update or add journal entry
             const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // MM/DD/YYYY format
             const updatedEntries = [...journalEntries];
             const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
-
+    
             if (existingEntryIndex !== -1) {
                 updatedEntries[existingEntryIndex].mood = mood;
             } else {
                 updatedEntries.push({ date: dateStr, mood });
             }
-
+    
             setJournalEntries(updatedEntries);
             localStorage.setItem('journalEntries', JSON.stringify(updatedEntries)); // Save to localStorage
         }
-
-        closeMoodSelector();
+    
+        // Do not close the mood selector here.
     };
+
 
     const logEntry = () => {
         navigateToEntry();
@@ -116,9 +118,13 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 })}
             </div>
 
+
             {isModalOpen && (
                 <div id="moodModal" className="modal" onClick={closeMoodSelector}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        {/* <button className="close-button" onClick={closeMoodSelector}>
+                            ✖ Close
+                        </button> */}
                         <h3>Select a Mood</h3>
                         <ul>
                             <li onClick={() => setMood('happy')}>
@@ -147,15 +153,19 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         >
                             <span className="log-entry-icon">📖</span> Log a journal entry
                         </button>
+                        <button className="save-close-button" onClick={closeMoodSelector}>
+                            Save and Close
+                        </button>
+
                     </div>
                 </div>
             )}
-
             <button className="settings-icon" onClick={navigateToSettings}>
                 ⚙️
             </button>
         </div>
-    );
+        );
+
 };
 
 export default Home;
