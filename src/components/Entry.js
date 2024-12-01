@@ -1,52 +1,106 @@
 import React, { useState, useEffect } from "react";
+import "../styles/Entry.css";
 
-const Entry = ({ navigateToHome }) => {
-  const [entryText, setEntryText] = useState("");
-  const [embeddedMusic, setEmbeddedMusic] = useState(null);
-  const [attachedImages, setAttachedImages] = useState([]);
-  const [date, setDate] = useState(new Date().toLocaleDateString());
-  const [entries, setEntries] = useState([]);
+const Entry = ({ navigateToHome, selectedDate }) => {
+    const [entryText, setEntryText] = useState("");
+    const [embeddedMusic, setEmbeddedMusic] = useState(null);
+    const [attachedImages, setAttachedImages] = useState([]);
+    const [formattedDate, setFormattedDate] = useState("");
 
-  // Load entries from localStorage on component mount
-  useEffect(() => {
-    const storedEntries = JSON.parse(localStorage.getItem("journalEntries")) || [];
-    setEntries(storedEntries);
-  }, []);
+    // Format the selectedDate into a more readable format
+    useEffect(() => {
+        if (selectedDate) {
+            const [month, day, year] = selectedDate.split("/").map(Number);
+            const date = new Date(year, month - 1, day);
+            const options = { month: "long", day: "numeric", year: "numeric" };
+            setFormattedDate(date.toLocaleDateString(undefined, options));
+        }
+    }, [selectedDate]);
 
-  const handleTextChange = (e) => {
-    setEntryText(e.target.value);
-  };
-
-  const handleSave = () => {
-    const journalEntry = {
-      date,
-      text: entryText,
-      music: embeddedMusic,
-      images: attachedImages.map((image) => image.name),
+    const handleTextChange = (e) => {
+        setEntryText(e.target.value);
     };
 
-    // Save new entry in state
-    const updatedEntries = [...entries, journalEntry];
-    setEntries(updatedEntries);
+    const handleAttachImage = (e) => {
+        const files = Array.from(e.target.files);
+        setAttachedImages((prevImages) => [...prevImages, ...files]);
+    };
 
-    // Save updated entries to localStorage
-    localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    const handleEmbedMusic = () => {
+        const musicUrl = prompt("Enter the URL of the music you want to embed:");
+        if (musicUrl) {
+            setEmbeddedMusic(musicUrl);
+        }
+    };
 
-    alert("Journal entry saved!");
-    navigateToHome();
-  };
+    const handleSave = () => {
+        const journalEntry = {
+            date: selectedDate,
+            text: entryText,
+            music: embeddedMusic,
+            images: attachedImages,
+        };
 
-  return (
-    <div>
-      <h1>{date}</h1>
-      <textarea
-        value={entryText}
-        onChange={handleTextChange}
-        placeholder="Write your journal entry here..."
-      />
-      <button onClick={handleSave}>Save Entry</button>
-    </div>
-  );
+        console.log("Saved Journal Entry:", journalEntry);
+        alert("Journal entry saved!");
+        navigateToHome();
+    };
+
+    return (
+        <div className="entry-container">
+            <button onClick={navigateToHome} className="entry-back-button">
+                ⬅ Back to Home
+            </button>
+
+            <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1> {/* Show correct date */}
+            
+            <textarea
+                className="entry-text-area"
+                value={entryText}
+                onChange={handleTextChange}
+                placeholder="Write your journal entry here..."
+            />
+            <div className="entry-buttons">
+                <button onClick={handleEmbedMusic} className="entry-button">
+                    Embed Music
+                </button>
+                <label className="entry-button">
+                    Attach Images
+                    <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleAttachImage}
+                        className="entry-file-input"
+                    />
+                </label>
+                <button
+                    onClick={handleSave}
+                    className="entry-done-button"
+                    disabled={!entryText.trim()}
+                >
+                    Done
+                </button>
+            </div>
+            <div className="entry-preview">
+                {embeddedMusic && (
+                    <iframe
+                        title="Embedded Music"
+                        src={embeddedMusic}
+                        className="entry-music-player"
+                    ></iframe>
+                )}
+                {attachedImages.map((image, index) => (
+                    <img
+                        key={index}
+                        src={URL.createObjectURL(image)}
+                        alt={`Attachment ${index + 1}`}
+                        className="entry-image"
+                    />
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default Entry;

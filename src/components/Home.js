@@ -35,48 +35,50 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     }, [selectedMonth]);
 
     const openMoodSelector = (date) => {
-        setSelectedDate(date);
-        setIsModalOpen(true);
+        setSelectedDate(date); // Set the selected date
+        setIsModalOpen(true); // Open the modal
     };
 
     const closeMoodSelector = () => {
-        setIsModalOpen(false);
+        setIsModalOpen(false); // Close the modal
     };
 
-
     const setMood = (mood) => {
-        setSelectedMood(mood);
+        setSelectedMood(mood); // Just set the mood without closing the modal
+    };
+
+    const logEntry = () => {
+        // Check if a valid mood and date are selected
+        if (selectedMood && selectedDate !== null) {
+            console.log(`Navigating to entry for date: ${selectedDate}`); // Debug log
     
-        if (selectedDate !== null) {
-            setMoodMap((prev) => ({
-                ...prev,
-                [selectedMonth + 1]: {
-                    ...prev[selectedMonth + 1],
-                    [selectedDate]: mood,
-                },
-            }));
+            // Format the date string properly if needed, for example "MM/DD/YYYY"
+            const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
     
-            // Update or add journal entry
+            // Navigate to the entry page with the formatted date
+            navigateToEntry(formattedDate); 
+        }
+    };
+    
+
+    const saveAndClose = () => {
+        // Save the selected mood for the selected date
+        if (selectedDate && selectedMood) {
             const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // MM/DD/YYYY format
             const updatedEntries = [...journalEntries];
             const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
-    
+
             if (existingEntryIndex !== -1) {
-                updatedEntries[existingEntryIndex].mood = mood;
+                updatedEntries[existingEntryIndex].mood = selectedMood;
             } else {
-                updatedEntries.push({ date: dateStr, mood });
+                updatedEntries.push({ date: dateStr, mood: selectedMood });
             }
-    
+
             setJournalEntries(updatedEntries);
             localStorage.setItem('journalEntries', JSON.stringify(updatedEntries)); // Save to localStorage
         }
-    
-        // Do not close the mood selector here.
-    };
 
-
-    const logEntry = () => {
-        navigateToEntry();
+        closeMoodSelector(); // Close the modal when saving
     };
 
     return (
@@ -118,13 +120,9 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 })}
             </div>
 
-
             {isModalOpen && (
                 <div id="moodModal" className="modal" onClick={closeMoodSelector}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        {/* <button className="close-button" onClick={closeMoodSelector}>
-                            ✖ Close
-                        </button> */}
                         <h3>Select a Mood</h3>
                         <ul>
                             <li onClick={() => setMood('happy')}>
@@ -153,19 +151,18 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         >
                             <span className="log-entry-icon">📖</span> Log a journal entry
                         </button>
-                        <button className="save-close-button" onClick={closeMoodSelector}>
+                        <button className="save-close-button" onClick={saveAndClose}>
                             Save and Close
                         </button>
-
                     </div>
                 </div>
             )}
+
             <button className="settings-icon" onClick={navigateToSettings}>
                 ⚙️
             </button>
         </div>
-        );
-
+    );
 };
 
 export default Home;
