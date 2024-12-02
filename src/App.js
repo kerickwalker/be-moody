@@ -46,7 +46,9 @@ const App = () => {
                 />
             )}
             {currentPage === "year" && <YearView onMonthClick={handleMonthClick} />}
-            {currentPage === "settings" && <Settings />}
+            {currentPage === "settings" && (
+                <Settings navigateToHome={navigateToHome} /> // Pass navigateToHome for back navigation
+            )}
             {currentPage === "entry" && (
                 <Entry
                     navigateToHome={navigateToHome}
