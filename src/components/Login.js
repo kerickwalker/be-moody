@@ -18,7 +18,7 @@ const Login = ({ navigateToHome }) => {
             <div className="login-background"></div>
             <div className="login-content">
                 <img 
-                    src="/logo.png" // Replace with the path to your logo
+                    src="logo.png" // Replace with the path to your logo
                     alt="App Logo"
                     className="logo"
                 />
