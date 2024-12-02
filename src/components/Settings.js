@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Settings.css';
 
-const Settings = ({ navigateToHome }) => {
+const Settings = ({ navigateToHome, navigateTologin }) => {
     const [emotionColors, setEmotionColors] = useState(
         JSON.parse(localStorage.getItem("emotionColors")) || {}
     );
@@ -14,8 +14,7 @@ const Settings = ({ navigateToHome }) => {
     }, [emotionColors]);
 
     const handleLogout = () => {
-        alert("Logged out successfully!");
-        navigateToHome(); // Redirect to Home or Login page after logout
+        navigateTologin(); // Redirect to Home or Login page after logout
     };
 
     const handleEmotionChange = (event) => {

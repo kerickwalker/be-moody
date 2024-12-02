@@ -28,6 +28,9 @@ const App = () => {
     const navigateToSettings = () => {
         setCurrentPage("settings");
     };
+    const navigateTologin = () => {
+        setCurrentPage("login");
+    };
 
     const handleMonthClick = (monthIndex) => {
         setSelectedMonth(monthIndex);
@@ -47,7 +50,11 @@ const App = () => {
             )}
             {currentPage === "year" && <YearView onMonthClick={handleMonthClick} />}
             {currentPage === "settings" && (
-                <Settings navigateToHome={navigateToHome} /> // Pass navigateToHome for back navigation
+                <Settings 
+                navigateToHome={navigateToHome} 
+                navigateTologin={navigateTologin}
+
+                /> // Pass navigateToHome for back navigation
             )}
             {currentPage === "entry" && (
                 <Entry
