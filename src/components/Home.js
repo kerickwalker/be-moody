@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
 
-
 const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moodMap, setMoodMap] = useState({});
     const [selectedMood, setSelectedMood] = useState(null);
     const [journalEntries, setJournalEntries] = useState([]);
+
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
     const daysInMonth = new Date(2024, selectedMonth + 1, 0).getDate();
     const firstDayOfWeek = new Date(2024, selectedMonth, 1).getDay();
@@ -16,6 +20,10 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         ...Array(firstDayOfWeek).fill(null),
         ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
     ];
+
+    // Get the current date
+    const currentDate = new Date();
+    const formattedDate = `${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
 
     useEffect(() => {
         // Load journal entries from localStorage
@@ -83,15 +91,10 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     return (
         <div>
             <div className="header">
-                <div className="view-toggle">
-                    <button
-                        className={`toggle-button active`}
-                        onClick={() => onToggleView('year')}
-                    >
-                        Yearly View
-                    </button>
+                <div className="today-date">
+                    <h3>Today is: {formattedDate}</h3>
                 </div>
-                <h2>{`Month: ${selectedMonth + 1}`}</h2>
+                <h2>{months[selectedMonth]}</h2> {/* Display month name */}
             </div>
 
             <div className="calendar">
@@ -104,19 +107,35 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 <div className="day">S</div>
 
                 {calendarDays.map((day, index) => {
+                    const isToday =
+                        day &&
+                        selectedMonth === new Date().getMonth() &&
+                        day === new Date().getDate();
                     const moodClass = day && moodMap[selectedMonth + 1]?.[day]
                         ? `mood-${moodMap[selectedMonth + 1][day]}`
                         : '';
                     return (
                         <div
                             key={index}
-                            className={`date ${moodClass} ${day ? '' : 'empty'}`}
+                            className={`date ${moodClass} ${isToday ? 'current-day' : ''} ${
+                                day ? '' : 'empty'
+                            }`}
                             onClick={day ? () => openMoodSelector(day) : undefined}
                         >
                             {day}
                         </div>
                     );
                 })}
+
+            </div>
+
+            <div className="view-toggle">
+                <button
+                    className={`toggle-button active`}
+                    onClick={() => onToggleView('year')}
+                >
+                    Yearly View
+                </button>
             </div>
 
             {isModalOpen && (
