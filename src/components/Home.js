@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
 
+
 const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,49 +37,47 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
 
     const openMoodSelector = (date) => {
         setSelectedDate(date); // Set the selected date
-        setIsModalOpen(true); // Open the modal
+        setIsModalOpen(true);
+        setSelectedMood(null); // Reset mood when opening the modal for a new day
     };
 
     const closeMoodSelector = () => {
-        setIsModalOpen(false); // Close the modal
+        setIsModalOpen(false);
     };
 
     const setMood = (mood) => {
-        setSelectedMood(mood); // Just set the mood without closing the modal
-    };
+        setSelectedMood(mood); // Set the selected mood for the specific day
+        
+        if (selectedDate !== null) {
+            setMoodMap((prev) => ({
+                ...prev,
+                [selectedMonth + 1]: {
+                    ...prev[selectedMonth + 1],
+                    [selectedDate]: mood,
+                },
+            }));
 
-    const logEntry = () => {
-        // Check if a valid mood and date are selected
-        if (selectedMood && selectedDate !== null) {
-            console.log(`Navigating to entry for date: ${selectedDate}`); // Debug log
-    
-            // Format the date string properly if needed, for example "MM/DD/YYYY"
-            const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
-    
-            // Navigate to the entry page with the formatted date
-            navigateToEntry(formattedDate); 
-        }
-    };
-    
-
-    const saveAndClose = () => {
-        // Save the selected mood for the selected date
-        if (selectedDate && selectedMood) {
+            // Update or add journal entry
             const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // MM/DD/YYYY format
             const updatedEntries = [...journalEntries];
             const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
 
             if (existingEntryIndex !== -1) {
-                updatedEntries[existingEntryIndex].mood = selectedMood;
+                updatedEntries[existingEntryIndex].mood = mood;
             } else {
-                updatedEntries.push({ date: dateStr, mood: selectedMood });
+                updatedEntries.push({ date: dateStr, mood });
             }
 
             setJournalEntries(updatedEntries);
             localStorage.setItem('journalEntries', JSON.stringify(updatedEntries)); // Save to localStorage
         }
+    };
 
-        closeMoodSelector(); // Close the modal when saving
+    const logEntry = () => {
+        if (selectedMood) {
+            const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
+            navigateToEntry(formattedDate);
+        }
     };
 
     return (
@@ -147,11 +146,11 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         <button
                             className="log-entry-button"
                             onClick={logEntry}
-                            disabled={!selectedMood}
+                            disabled={!selectedMood || selectedDate === null}
                         >
                             <span className="log-entry-icon">📖</span> Log a journal entry
                         </button>
-                        <button className="save-close-button" onClick={saveAndClose}>
+                        <button className="save-close-button" onClick={closeMoodSelector}>
                             Save and Close
                         </button>
                     </div>
