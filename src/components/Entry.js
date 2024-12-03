@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import SpotifyEmbed from "./SpotifyEmbed"; // Adjust the path if needed
 import "../styles/Entry.css";
 
 const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
     const [entryText, setEntryText] = useState("");
-    const [embeddedMusic, setEmbeddedMusic] = useState(null);
     const [attachedImages, setAttachedImages] = useState([]);
     const [formattedDate, setFormattedDate] = useState("");
 
@@ -26,18 +26,10 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
         setAttachedImages((prevImages) => [...prevImages, ...files]);
     };
 
-    const handleEmbedMusic = () => {
-        const musicUrl = prompt("Enter the URL of the music you want to embed:");
-        if (musicUrl) {
-            setEmbeddedMusic(musicUrl);
-        }
-    };
-
     const handleSave = () => {
         const journalEntry = {
             date: selectedDate,
             text: entryText,
-            music: embeddedMusic,
             images: attachedImages,
         };
 
@@ -51,13 +43,11 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
             className="entry-container"
             style={{ backgroundColor: moodColor || "white" }} // Default to white if no mood color
         >
-
             <button onClick={navigateToHome} className="entry-back-button">
                 ⬅ Back to Home
             </button>
 
-            <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1> {/* Show correct date */}
-            
+            <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1>
             <textarea
                 className="entry-text-area"
                 value={entryText}
@@ -65,9 +55,6 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
                 placeholder="Write your journal entry here..."
             />
             <div className="entry-buttons">
-                <button onClick={handleEmbedMusic} className="entry-button">
-                    Embed Music
-                </button>
                 <label className="entry-button">
                     Attach Images
                     <input
@@ -87,13 +74,7 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
                 </button>
             </div>
             <div className="entry-preview">
-                {embeddedMusic && (
-                    <iframe
-                        title="Embedded Music"
-                        src={embeddedMusic}
-                        className="entry-music-player"
-                    ></iframe>
-                )}
+                <SpotifyEmbed /> {/* Integrate SpotifyEmbed */}
                 {attachedImages.map((image, index) => (
                     <img
                         key={index}
