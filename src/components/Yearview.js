@@ -8,6 +8,17 @@ const YearView = ({ onMonthClick }) => {
     ];
 
     const [moodMap, setMoodMap] = useState({});
+    const [customMoods, setCustomMoods] = useState([]); // Store custom moods
+
+    // Predefined mood colors
+    const predefinedMoodColors = {
+        happy: '#ffeb3b',
+        sad: '#90caf9',
+        nostalgic: '#ffcc80',
+        frustrated: '#ef9a9a', 
+        anxious: '#a5d6a7',
+        angry: '#e57373'
+    };
 
     useEffect(() => {
         // Load journal entries from localStorage
@@ -25,6 +36,10 @@ const YearView = ({ onMonthClick }) => {
         }, {});
 
         setMoodMap(moodData);
+
+        // Load custom moods from localStorage
+        const storedMoods = JSON.parse(localStorage.getItem('customMoods')) || [];
+        setCustomMoods(storedMoods);
     }, []);
 
     const generateCalendarDays = (month) => {
@@ -51,12 +66,18 @@ const YearView = ({ onMonthClick }) => {
                         <div className="mini-calendar">
                             {generateCalendarDays(index).map((day, dayIndex) => {
                                 const mood = day ? moodMap[2024]?.[index]?.[day] : null; // Access mood using year, month, day
-                                const moodClass = mood ? `mood-${mood}` : '';
+                                
+                                // Determine the mood color (either predefined or custom)
+                                const moodColor = mood
+                                    ? predefinedMoodColors[mood] ||
+                                      customMoods.find((custom) => custom.name === mood)?.color
+                                    : null;
 
                                 return (
                                     <div
                                         key={dayIndex}
-                                        className={`mini-calendar-day ${moodClass} ${day ? '' : 'empty'}`}
+                                        className={`mini-calendar-day ${day ? '' : 'empty'}`}
+                                        style={{ backgroundColor: moodColor || '' }}
                                     >
                                         {day || ''}
                                     </div>

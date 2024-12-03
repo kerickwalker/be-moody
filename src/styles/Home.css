@@ -79,13 +79,6 @@ body {
     height: 40px;
 }
 
-.mood-happy { background-color: #ffeb3b; }
-.mood-sad { background-color: #90caf9; }
-.mood-nostalgic { background-color: #ffcc80; }
-.mood-frustrated { background-color: #ef9a9a; }
-.mood-anxious { background-color: #a5d6a7; }
-.mood-angry { background-color: #e57373; }
-
 /* Modal styles */
 .modal {
     display: flex;

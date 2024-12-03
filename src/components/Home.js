@@ -7,6 +7,10 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     const [moodMap, setMoodMap] = useState({});
     const [selectedMood, setSelectedMood] = useState(null);
     const [journalEntries, setJournalEntries] = useState([]);
+    const [isMoodEditorOpen, setIsMoodEditorOpen] = useState(false);
+    const [customMoods, setCustomMoods] = useState([]); // Store custom moods
+    const [newMoodName, setNewMoodName] = useState('');
+    const [newMoodColor, setNewMoodColor] = useState('#ffffff'); // Default white color for custom mood
 
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -41,6 +45,9 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         }, {});
 
         setMoodMap(moodData);
+
+        const storedMoods = JSON.parse(localStorage.getItem('customMoods')) || [];
+        setCustomMoods(storedMoods);
     }, [selectedMonth]);
 
     const openMoodSelector = (date) => {
@@ -88,6 +95,28 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         }
     };
 
+    const addCustomMood = () => {
+        if (newMoodName && newMoodColor) {
+            const newMood = { name: newMoodName, color: newMoodColor };
+            const updatedMoods = [...customMoods, newMood];
+            setCustomMoods(updatedMoods);
+            localStorage.setItem('customMoods', JSON.stringify(updatedMoods));
+            setNewMoodName('');
+            setNewMoodColor('#ffffff');
+            setIsMoodEditorOpen(false); // Close the editor modal
+        }
+    };
+
+    // Predefined mood colors
+    const predefinedMoodColors = {
+        happy: '#ffeb3b',
+        sad: '#90caf9',
+        nostalgic: '#ffcc80',
+        frustrated: '#ef9a9a', 
+        anxious: '#a5d6a7',
+        angry: '#e57373'
+    };
+
     return (
         <div>
             <div className="header">
@@ -111,22 +140,26 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         day &&
                         selectedMonth === new Date().getMonth() &&
                         day === new Date().getDate();
-                    const moodClass = day && moodMap[selectedMonth + 1]?.[day]
-                        ? `mood-${moodMap[selectedMonth + 1][day]}`
-                        : '';
+                    
+                    const mood = day && moodMap[selectedMonth + 1]?.[day];
+
+                    // Determine the mood color (either predefined or custom)
+                    const moodColor = mood
+                        ? predefinedMoodColors[mood] || 
+                          customMoods.find((custom) => custom.name === mood)?.color
+                        : null;
+
                     return (
                         <div
                             key={index}
-                            className={`date ${moodClass} ${isToday ? 'current-day' : ''} ${
-                                day ? '' : 'empty'
-                            }`}
+                            className={`date ${isToday ? 'current-day' : ''} ${day ? '' : 'empty'}`}
+                            style={{ backgroundColor: moodColor || '' }}
                             onClick={day ? () => openMoodSelector(day) : undefined}
                         >
                             {day}
                         </div>
                     );
                 })}
-
             </div>
 
             <div className="view-toggle">
@@ -161,6 +194,20 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                             <li onClick={() => setMood('angry')}>
                                 <span className="mood-color-box mood-angry"></span> Angry
                             </li>
+                            {customMoods.map((mood, index) => (
+                                <li key={index} onClick={() => setMood(mood.name)}>
+                                    <span
+                                        className="mood-color-box"
+                                        style={{ backgroundColor: mood.color }}
+                                    ></span> 
+                                    {mood.name}
+                                </li>
+                            ))}
+                            <li>
+                                <button onClick={() => setIsMoodEditorOpen(true)} className="add-mood-button">
+                                    + Add Mood
+                                </button>
+                            </li>
                         </ul>
                         <button
                             className="log-entry-button"
@@ -172,6 +219,26 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         <button className="save-close-button" onClick={closeMoodSelector}>
                             Save and Close
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {isMoodEditorOpen && (
+                <div className="modal" onClick={() => setIsMoodEditorOpen(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Create New Mood</h3>
+                        <input
+                            type="text"
+                            placeholder="Mood name"
+                            value={newMoodName}
+                            onChange={(e) => setNewMoodName(e.target.value)}
+                        />
+                        <input
+                            type="color"
+                            value={newMoodColor}
+                            onChange={(e) => setNewMoodColor(e.target.value)}
+                        />
+                        <button onClick={addCustomMood}>Save Mood</button>
                     </div>
                 </div>
             )}
