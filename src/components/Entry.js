@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Entry.css";
 
-const Entry = ({ navigateToHome, selectedDate }) => {
+const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
     const [entryText, setEntryText] = useState("");
     const [embeddedMusic, setEmbeddedMusic] = useState(null);
     const [attachedImages, setAttachedImages] = useState([]);
@@ -47,7 +47,11 @@ const Entry = ({ navigateToHome, selectedDate }) => {
     };
 
     return (
-        <div className="entry-container">
+        <div
+            className="entry-container"
+            style={{ backgroundColor: moodColor || "white" }} // Default to white if no mood color
+        >
+
             <button onClick={navigateToHome} className="entry-back-button">
                 ⬅ Back to Home
             </button>
