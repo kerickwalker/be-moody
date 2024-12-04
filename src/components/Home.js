@@ -87,7 +87,6 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         }
     };
 
-
     const logEntry = () => {
         if (selectedDate !== null) {
             const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
@@ -98,8 +97,6 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
             navigateToEntry(formattedDate, moodColor); // Include mood color
         }
     };
-    
-    
 
     const addCustomMood = () => {
         if (newMoodName && newMoodColor) {
@@ -205,14 +202,17 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                             </li>
                         </ul>
                         <button
-                        className="log-entry-button"
-                        onClick={logEntry}
-                        disabled={selectedDate === null}
-                    >
-                        {journalEntries.find((entry) => entry.date === `${selectedMonth + 1}/${selectedDate}/2024`)
-                            ? 'View journal entry'
-                            : 'Log a journal entry'}
-                    </button>
+                            className="log-entry-button"
+                            onClick={logEntry}
+                            disabled={selectedDate === null}
+                        >
+                            {(() => {
+                                const existingEntry = journalEntries.find((entry) => entry.date === `${selectedMonth + 1}/${selectedDate}/2024`);
+                                // Check if the journal entry has additional content (text, images, or Spotify link)
+                                const hasAdditionalContent = existingEntry && (existingEntry.text || existingEntry.images?.length > 0 || existingEntry.spotifyLink);
+                                return hasAdditionalContent ? 'View journal entry' : 'Log a journal entry';
+                            })()}
+                        </button>
                         <button className="save-close-button" onClick={closeMoodSelector}>
                             Save and Close
                         </button>
