@@ -81,7 +81,7 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
     return (
         <div className="entry-container" style={{ backgroundColor: moodColor || "white" }}>
             <button onClick={navigateToHome} className="entry-back-button">
-                ⬅ Back to Home
+                ⬅ Exit Without Saving
             </button>
 
             <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1>
