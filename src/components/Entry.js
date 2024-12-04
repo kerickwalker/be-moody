@@ -7,13 +7,22 @@ const Entry = ({ navigateToHome, selectedDate }) => {
     const [attachedImages, setAttachedImages] = useState([]);
     const [formattedDate, setFormattedDate] = useState("");
 
-    // Format the selectedDate into a more readable format
     useEffect(() => {
         if (selectedDate) {
             const [month, day, year] = selectedDate.split("/").map(Number);
             const date = new Date(year, month - 1, day);
             const options = { month: "long", day: "numeric", year: "numeric" };
             setFormattedDate(date.toLocaleDateString(undefined, options));
+
+            // Load existing journal entry from localStorage
+            const storedEntries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+            const existingEntry = storedEntries.find((entry) => entry.date === selectedDate);
+            
+            if (existingEntry) {
+                setEntryText(existingEntry.text || "");
+                setEmbeddedMusic(existingEntry.music || null);
+                setAttachedImages((existingEntry.images || []).map((file) => new File([], file.name)));
+            }
         }
     }, [selectedDate]);
 
@@ -34,17 +43,30 @@ const Entry = ({ navigateToHome, selectedDate }) => {
     };
 
     const handleSave = () => {
+        const storedEntries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+        const existingEntry = storedEntries.find((entry) => entry.date === selectedDate);
+    
+        // Merge new data with existing metadata (like color)
         const journalEntry = {
+            ...existingEntry, // Keep any existing data, such as color
             date: selectedDate,
             text: entryText,
             music: embeddedMusic,
-            images: attachedImages,
+            images: attachedImages.map((image) => ({
+                name: image.name,
+            })),
         };
-
+    
+        const updatedEntries = storedEntries.filter((entry) => entry.date !== selectedDate);
+        updatedEntries.push(journalEntry);
+    
+        localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    
         console.log("Saved Journal Entry:", journalEntry);
         alert("Journal entry saved!");
         navigateToHome();
     };
+    
 
     return (
         <div className="entry-container">
@@ -52,7 +74,7 @@ const Entry = ({ navigateToHome, selectedDate }) => {
                 ⬅ Back to Home
             </button>
 
-            <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1> {/* Show correct date */}
+            <h1 className="entry-date">{formattedDate || "No Date Selected"}</h1>
             
             <textarea
                 className="entry-text-area"

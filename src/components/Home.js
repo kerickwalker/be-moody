@@ -89,9 +89,17 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     };
 
     const logEntry = () => {
-        if (selectedMood) {
+        if (selectedDate !== null) {
             const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
-            navigateToEntry(formattedDate);
+            const existingEntry = journalEntries.find((entry) => entry.date === formattedDate);
+    
+            if (existingEntry) {
+                // View existing journal entry
+                navigateToEntry(formattedDate, existingEntry); // Pass the entry to view it
+            } else if (selectedMood) {
+                // Log a new journal entry
+                navigateToEntry(formattedDate);
+            }
         }
     };
 
@@ -210,12 +218,14 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                             </li>
                         </ul>
                         <button
-                            className="log-entry-button"
-                            onClick={logEntry}
-                            disabled={!selectedMood || selectedDate === null}
-                        >
-                            <span className="log-entry-icon">📖</span> Log a journal entry
-                        </button>
+                        className="log-entry-button"
+                        onClick={logEntry}
+                        disabled={selectedDate === null}
+                    >
+                        {journalEntries.find((entry) => entry.date === `${selectedMonth + 1}/${selectedDate}/2024`)
+                            ? 'View journal entry'
+                            : 'Log a journal entry'}
+                    </button>
                         <button className="save-close-button" onClick={closeMoodSelector}>
                             Save and Close
                         </button>
