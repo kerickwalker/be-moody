@@ -3,6 +3,8 @@ import React from "react";
 const SpotifyEmbed = ({ link }) => {
     // Extract the Spotify track/playlist/album ID
     const getEmbedUrl = (url) => {
+        if (!url) return null; // Return null for empty input
+
         try {
             const spotifyUrlPattern =
                 /https:\/\/open\.spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/;
@@ -20,8 +22,12 @@ const SpotifyEmbed = ({ link }) => {
 
     const embedUrl = getEmbedUrl(link);
 
-    if (!embedUrl) {
+    if (link && !embedUrl) {
         return <p style={{ color: "red" }}>Invalid Spotify link. Please try again!</p>;
+    }
+
+    if (!embedUrl) {
+        return null; // Don't render anything for empty or invalid links by default
     }
 
     return (

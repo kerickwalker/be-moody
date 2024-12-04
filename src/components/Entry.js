@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SpotifyEmbed from "./SpotifyEmbed";
 import "../styles/Entry.css";
 
 const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
     const [entryText, setEntryText] = useState("");
-    const [spotifyLink, setSpotifyLink] = useState("");
     const [attachedImages, setAttachedImages] = useState([]);
+    const [spotifyLink, setSpotifyLink] = useState("");
     const [formattedDate, setFormattedDate] = useState("");
+    const [showSpotifyEmbed, setShowSpotifyEmbed] = useState(false);
+    const fileInputRef = useRef(null); // Ref for hidden file input
 
     useEffect(() => {
         if (selectedDate) {
@@ -22,6 +24,9 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
                 setEntryText(existingEntry.text || "");
                 setSpotifyLink(existingEntry.spotifyLink || "");
                 setAttachedImages(existingEntry.images || []);
+                if (existingEntry.spotifyLink) {
+                    setShowSpotifyEmbed(true); // Show embed if a Spotify link is saved
+                }
             }
         }
     }, [selectedDate]);
@@ -57,7 +62,7 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
             date: selectedDate,
             text: entryText,
             spotifyLink,
-            images: attachedImages, // Save base64 strings
+            images: attachedImages,
         };
 
         const updatedEntries = storedEntries.filter((entry) => entry.date !== selectedDate);
@@ -67,6 +72,10 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
 
         alert("Journal entry saved!");
         navigateToHome();
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current.click(); // Trigger hidden file input
     };
 
     return (
@@ -84,16 +93,17 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
             />
 
             <div className="entry-section">
-                <label className="entry-button">
+                <button onClick={triggerFileInput} className="attach-image-button">
                     Attach Images
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleAttachImage}
-                        className="entry-file-input"
-                    />
-                </label>
+                </button>
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    ref={fileInputRef}
+                    style={{ display: "none" }} // Hide the file input
+                    onChange={handleAttachImage}
+                />
                 <div className="entry-images">
                     {attachedImages.map((image, index) => (
                         <div className="image-wrapper" key={index}>
@@ -114,14 +124,26 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
             </div>
 
             <div className="entry-section">
-                <input
-                    type="text"
-                    value={spotifyLink}
-                    onChange={handleSpotifyLinkChange}
-                    placeholder="Paste Spotify link here..."
-                    className="spotify-input"
-                />
-                {spotifyLink && <SpotifyEmbed link={spotifyLink} />}
+                {!showSpotifyEmbed && (
+                    <button
+                        onClick={() => setShowSpotifyEmbed(true)}
+                        className="embed-music-button"
+                    >
+                        Embed Music
+                    </button>
+                )}
+                {showSpotifyEmbed && (
+                    <div>
+                        <input
+                            type="text"
+                            value={spotifyLink}
+                            onChange={handleSpotifyLinkChange}
+                            placeholder="Paste Spotify link here..."
+                            className="spotify-link-input"
+                        />
+                        <SpotifyEmbed link={spotifyLink} />
+                    </div>
+                )}
             </div>
 
             <button
