@@ -1,45 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 
-const SpotifyEmbed = () => {
-    const [spotifyUrl, setSpotifyUrl] = useState("");
-    const [embedUrl, setEmbedUrl] = useState("");
+const SpotifyEmbed = ({ link }) => {
+    // Extract the Spotify track/playlist/album ID
+    const getEmbedUrl = (url) => {
+        try {
+            const spotifyUrlPattern =
+                /https:\/\/open\.spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/;
+            const match = url.match(spotifyUrlPattern);
 
-    const handleUrlChange = (e) => {
-        const url = e.target.value;
-        setSpotifyUrl(url);
-
-        // Extract the Spotify embed URL
-        if (url.startsWith("https://open.spotify.com/")) {
-            const embedUrl = url.replace("https://open.spotify.com/", "https://open.spotify.com/embed/");
-            setEmbedUrl(embedUrl);
-        } else {
-            setEmbedUrl(""); // Clear embed URL if invalid
+            if (match) {
+                const [_, type, id] = match;
+                return `https://open.spotify.com/embed/${type}/${id}`;
+            }
+        } catch (err) {
+            console.error("Invalid Spotify URL:", err);
         }
+        return null;
     };
 
+    const embedUrl = getEmbedUrl(link);
+
+    if (!embedUrl) {
+        return <p style={{ color: "red" }}>Invalid Spotify link. Please try again!</p>;
+    }
+
     return (
-        <div>
-            <input
-                type="text"
-                placeholder="Paste Spotify song or playlist link here"
-                value={spotifyUrl}
-                onChange={handleUrlChange}
-                style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
-            />
-            {embedUrl ? (
-                <iframe
-                    src={embedUrl}
-                    width="300"
-                    height="80"
-                    frameBorder="0"
-                    allow="encrypted-media"
-                    allowTransparency="true"
-                    title="Spotify Player"
-                ></iframe>
-            ) : (
-                spotifyUrl && <p style={{ color: "red" }}>Invalid Spotify URL</p>
-            )}
-        </div>
+        <iframe
+            title="Spotify Embed"
+            src={embedUrl}
+            width="100%"
+            height="80"
+            frameBorder="0"
+            allow="encrypted-media"
+            style={{ borderRadius: "10px", marginTop: "10px" }}
+        ></iframe>
     );
 };
 
