@@ -9,17 +9,18 @@ const App = () => {
     const [currentPage, setCurrentPage] = useState("login"); // Start with 'login'
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedDate, setSelectedDate] = useState(null); // Track the selected date
+    const [selectedMoodColor, setSelectedMoodColor] = useState(null);
 
     // Navigation handlers
     const navigateToHome = () => {
         setCurrentPage("home");
     };
 
-    const navigateToEntry = (date) => {
-        setSelectedDate(date); // Set the selected date before navigating
+    const navigateToEntry = (date, moodColor) => {
+        setSelectedDate(date); 
+        setSelectedMoodColor(moodColor); // Store mood color
         setCurrentPage("entry");
     };
-
 
     const navigateToYearView = () => {
         setCurrentPage("year");
@@ -56,12 +57,15 @@ const App = () => {
 
                 /> // Pass navigateToHome for back navigation
             )}
+    
             {currentPage === "entry" && (
                 <Entry
                     navigateToHome={navigateToHome}
-                    selectedDate={selectedDate} // Pass the selected date to Entry
+                    selectedDate={selectedDate}
+                    moodColor={selectedMoodColor} // Pass the mood color
                 />
             )}
+
         </div>
     );
 };
