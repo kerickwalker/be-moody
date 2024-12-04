@@ -87,12 +87,19 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         }
     };
 
+
     const logEntry = () => {
         if (selectedMood) {
             const formattedDate = `${selectedMonth + 1}/${selectedDate}/2024`;
-            navigateToEntry(formattedDate);
+            const moodColor =
+                predefinedMoodColors[selectedMood] || 
+                customMoods.find((mood) => mood.name === selectedMood)?.color;
+    
+            navigateToEntry(formattedDate, moodColor); // Include mood color
         }
     };
+    
+    
 
     const addCustomMood = () => {
         if (newMoodName && newMoodColor) {
