@@ -169,3 +169,107 @@ body {
 .current-day {
     border: 2px solid black; /* Bold black outline */
 }
+
+/* Add hover effect for mood options */
+.modal-content ul li:hover {
+    background-color: #f1f1f1; /* Light background on hover */
+    cursor: pointer;
+}
+
+/* Add selected mood styling */
+.modal-content ul li.selected {
+    background-color: #dcdcdc; /* Slightly darker background when selected */
+    font-weight: bold; /* Bold the selected mood */
+}
+
+/* Add padding to mood items for better user experience */
+.modal-content ul li {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Add hover effect for "Add Mood" button */
+.add-mood-button:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+/* Modal Button Styles */
+.save-close-button,
+.log-entry-button,
+.add-mood-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 12px 20px; /* Adjust padding for spacing */
+    border: none;
+    border-radius: 30px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    margin-top: 15px; /* Add top margin for spacing */
+}
+
+.save-close-button {
+    background-color: black; /* Green background */
+    color: white; /* White text */
+}
+
+.save-close-button:hover {
+    background-color: black; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly grow the button */
+}
+
+.save-close-button:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* Log Entry Button Styles */
+.log-entry-button {
+    background-color: #000000; /* Black background */
+    color: white; /* White text */
+    margin-top: 20px; /* Add space between buttons */
+}
+
+.log-entry-button:hover {
+    background-color: #333333; /* Darker black color */
+    transform: scale(1.05); /* Slightly grow the button */
+}
+
+.log-entry-button:disabled {
+    background-color: #666666; /* Lighter black color when disabled */
+    cursor: not-allowed; /* Show cursor as not allowed */
+}
+
+.log-entry-button:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* Add Mood Button Styles */
+.add-mood-button {
+    background-color: #eeeeee; /* Light background */
+    color: #333333; /* Dark text */
+    font-size: 16px;
+    border: 1px solid #ccc; /* Light border */
+}
+
+.add-mood-button:hover {
+    background-color: #dcdcdc; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly grow the button */
+}
+
+.add-mood-button:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* Button Icon Styles */
+.log-entry-icon {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+/* Remove outline on focus */
+button:focus {
+    outline: none;
+}
+

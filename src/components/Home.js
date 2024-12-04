@@ -25,7 +25,6 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
     ];
 
-    // Get the current date
     const currentDate = new Date();
     const formattedDate = `${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
 
@@ -37,9 +36,9 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         // Populate moodMap with keys including both month and day
         const moodData = storedEntries.reduce((acc, entry) => {
             if (entry.date && entry.mood) {
-                const [month, day] = entry.date.split('/').map(Number); // MM/DD/YYYY format
-                if (!acc[month]) acc[month] = {}; // Initialize month if not present
-                acc[month][day] = entry.mood; // Store mood for specific day
+                const [month, day] = entry.date.split('/').map(Number);
+                if (!acc[month]) acc[month] = {};
+                acc[month][day] = entry.mood;
             }
             return acc;
         }, {});
@@ -51,9 +50,9 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     }, [selectedMonth]);
 
     const openMoodSelector = (date) => {
-        setSelectedDate(date); // Set the selected date
+        setSelectedDate(date); 
         setIsModalOpen(true);
-        setSelectedMood(null); // Reset mood when opening the modal for a new day
+        setSelectedMood(null); // Reset selected mood when opening modal
     };
 
     const closeMoodSelector = () => {
@@ -61,8 +60,8 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
     };
 
     const setMood = (mood) => {
-        setSelectedMood(mood); // Set the selected mood for the specific day
-        
+        setSelectedMood(mood); // Set the selected mood
+
         if (selectedDate !== null) {
             setMoodMap((prev) => ({
                 ...prev,
@@ -73,7 +72,7 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
             }));
 
             // Update or add journal entry
-            const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`; // MM/DD/YYYY format
+            const dateStr = `${selectedMonth + 1}/${selectedDate}/2024`;
             const updatedEntries = [...journalEntries];
             const existingEntryIndex = updatedEntries.findIndex((entry) => entry.date === dateStr);
 
@@ -107,7 +106,6 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
         }
     };
 
-    // Predefined mood colors
     const predefinedMoodColors = {
         happy: '#ffeb3b',
         sad: '#90caf9',
@@ -123,7 +121,7 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 <div className="today-date">
                     <h3>Today is: {formattedDate}</h3>
                 </div>
-                <h2>{months[selectedMonth]}</h2> {/* Display month name */}
+                <h2>{months[selectedMonth]}</h2>
             </div>
 
             <div className="calendar">
@@ -142,8 +140,6 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                         day === new Date().getDate();
                     
                     const mood = day && moodMap[selectedMonth + 1]?.[day];
-
-                    // Determine the mood color (either predefined or custom)
                     const moodColor = mood
                         ? predefinedMoodColors[mood] || 
                           customMoods.find((custom) => custom.name === mood)?.color
@@ -176,30 +172,22 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h3>Select a Mood</h3>
                         <ul>
-                            <li onClick={() => setMood('happy')}>
-                                <span className="mood-color-box mood-happy"></span> Happy
-                            </li>
-                            <li onClick={() => setMood('sad')}>
-                                <span className="mood-color-box mood-sad"></span> Sad
-                            </li>
-                            <li onClick={() => setMood('nostalgic')}>
-                                <span className="mood-color-box mood-nostalgic"></span> Nostalgic
-                            </li>
-                            <li onClick={() => setMood('frustrated')}>
-                                <span className="mood-color-box mood-frustrated"></span> Frustrated
-                            </li>
-                            <li onClick={() => setMood('anxious')}>
-                                <span className="mood-color-box mood-anxious"></span> Anxious
-                            </li>
-                            <li onClick={() => setMood('angry')}>
-                                <span className="mood-color-box mood-angry"></span> Angry
-                            </li>
+                            {['happy', 'sad', 'nostalgic', 'frustrated', 'anxious', 'angry'].map((mood) => (
+                                <li
+                                    key={mood}
+                                    onClick={() => setMood(mood)}
+                                    className={selectedMood === mood ? 'selected' : ''}
+                                >
+                                    <span className={`mood-color-box mood-${mood}`}></span> {mood.charAt(0).toUpperCase() + mood.slice(1)}
+                                </li>
+                            ))}
                             {customMoods.map((mood, index) => (
-                                <li key={index} onClick={() => setMood(mood.name)}>
-                                    <span
-                                        className="mood-color-box"
-                                        style={{ backgroundColor: mood.color }}
-                                    ></span> 
+                                <li
+                                    key={index}
+                                    onClick={() => setMood(mood.name)}
+                                    className={selectedMood === mood.name ? 'selected' : ''}
+                                >
+                                    <span className="mood-color-box" style={{ backgroundColor: mood.color }}></span> 
                                     {mood.name}
                                 </li>
                             ))}
