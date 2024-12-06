@@ -1,135 +1,183 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
 .entry-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: white;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9); /* Similar translucent background */
+  padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Matching shadow style */
+  text-align: center;
+  max-width: 400px; /* Align with the `.login-content` max-width */
+  width: 100%; /* Full width within parent container */
+  margin: 0 auto; /* Center horizontally if necessary */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  gap: 15px; /* Space between child elements */
+  z-index: 2; /* Ensure proper layering */
 }
 
-.entry-back-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.entry-back-button:hover {
-  background-color: #0056b3;
-}
 
 .entry-date {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 .entry-text-area {
   width: 100%;
   height: 150px;
   padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  resize: none;
-  font-size: 16px;
-}
-
-.entry-section {
-  margin-bottom: 20px;
-}
-
-.attach-image-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.attach-image-button:hover {
-  background-color: #0056b3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: none; /* Disable resizing to prevent layout shifts */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Allow scrolling for long text */
 }
 
 .entry-images {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .image-wrapper {
   position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .entry-image {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 5px;
-  border: 1px solid #ddd;
 }
 
 .remove-image-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: rgba(0, 0, 0, 0.7);
+  top: 3px;
+  right: 3px;
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 12px;
   cursor: pointer;
-}
-
-.embed-music-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.embed-music-button:hover {
-  background-color: #0056b3;
+  padding: 5px;
+  font-size: 10px;
 }
 
 .spotify-link-input {
-  width: calc(100% - 20px);
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures the input doesn't overflow */
+}
+
+.entry-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Vertical spacing for other buttons */
+}
+
+.inline-buttons {
+  display: flex;
+  justify-content: space-between; /* Space out the buttons evenly */
+  gap: 10px; /* Add spacing between the buttons */
+}
+
+.attach-image-button,
+.embed-music-button {
+  flex: 1; /* Ensure buttons take up equal width */
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-align: center;
+}
+
+.attach-image-button {
+  background-color: #007bff; /* Blue */
+  color: white;
+}
+
+.attach-image-button:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+.embed-music-button {
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+
+.embed-music-button:hover {
+  background-color: #5a6268; /* Darker gray */
+}
+
+.entry-back-button,
+.attach-image-button,
+.embed-music-button,
+.entry-save-button {
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-align: center;
+}
+
+.entry-back-button {
+  background-color: #000;
+  color: white;
+}
+
+.entry-back-button:hover {
+  background-color: #333;
 }
 
 .entry-save-button {
-  width: 100%;
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
 }
 
-.entry-save-button:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
+.entry-save-button:hover {
+  background-color: #218838;
 }
 
-.entry-save-button:hover:not(:disabled) {
-  background-color: #0056b3;
+/* Adjustments for consistency */
+.entry-container, .entry-text-area, .spotify-link-input {
+  max-width: 300px; /* Prevent expanding beyond Home.js width */
+}
+
+/* Responsive Design */
+@media (max-width: 390px) {
+  .entry-container {
+      width: 90%; /* Fit within smaller screens */
+  }
+
+  .entry-text-area {
+      font-size: 13px;
+  }
 }

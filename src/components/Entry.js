@@ -92,58 +92,62 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
                 placeholder="Write your journal entry here..."
             />
 
-            <div className="entry-section">
-                <button onClick={triggerFileInput} className="attach-image-button">
-                    Attach Images
-                </button>
-                <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    ref={fileInputRef}
-                    style={{ display: "none" }} // Hide the file input
-                    onChange={handleAttachImage}
-                />
-                <div className="entry-images">
-                    {attachedImages.map((image, index) => (
-                        <div className="image-wrapper" key={index}>
-                            <img
-                                src={image}
-                                alt={`Attachment ${index + 1}`}
-                                className="entry-image"
-                            />
-                            <button
-                                className="remove-image-button"
-                                onClick={() => handleRemoveImage(index)}
-                            >
-                                ✖
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="entry-section">
-                {!showSpotifyEmbed && (
-                    <button
-                        onClick={() => setShowSpotifyEmbed(true)}
-                        className="embed-music-button"
-                    >
-                        Embed Music
-                    </button>
-                )}
-                {showSpotifyEmbed && (
-                    <div>
+            <div class="entry-buttons">
+                <div class="inline-buttons">
+                    <div className="entry-section">
+                        <button onClick={triggerFileInput} className="attach-image-button">
+                            Attach Images
+                        </button>
                         <input
-                            type="text"
-                            value={spotifyLink}
-                            onChange={handleSpotifyLinkChange}
-                            placeholder="Paste Spotify link here..."
-                            className="spotify-link-input"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            ref={fileInputRef}
+                            style={{ display: "none" }} // Hide the file input
+                            onChange={handleAttachImage}
                         />
-                        <SpotifyEmbed link={spotifyLink} />
+                        <div className="entry-images">
+                            {attachedImages.map((image, index) => (
+                                <div className="image-wrapper" key={index}>
+                                    <img
+                                        src={image}
+                                        alt={`Attachment ${index + 1}`}
+                                        className="entry-image"
+                                    />
+                                    <button
+                                        className="remove-image-button"
+                                        onClick={() => handleRemoveImage(index)}
+                                    >
+                                        ✖
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                )}
+
+                    <div className="entry-section">
+                        {!showSpotifyEmbed && (
+                            <button
+                                onClick={() => setShowSpotifyEmbed(true)}
+                                className="embed-music-button"
+                            >
+                                Embed Music
+                            </button>
+                        )}
+                        {showSpotifyEmbed && (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={spotifyLink}
+                                    onChange={handleSpotifyLinkChange}
+                                    placeholder="Paste Spotify link here..."
+                                    className="spotify-link-input"
+                                />
+                                <SpotifyEmbed link={spotifyLink} />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <button
@@ -154,6 +158,8 @@ const Entry = ({ navigateToHome, selectedDate, moodColor }) => {
                 Save Entry
             </button>
         </div>
+
+        
     );
 };
 
