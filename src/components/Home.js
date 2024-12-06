@@ -224,21 +224,48 @@ const Home = ({ selectedMonth, onToggleView, navigateToEntry, navigateToSettings
                 <div className="modal" onClick={() => setIsMoodEditorOpen(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h3>Create New Mood</h3>
-                        <input
-                            type="text"
-                            placeholder="Mood name"
-                            value={newMoodName}
-                            onChange={(e) => setNewMoodName(e.target.value)}
-                        />
-                        <input
-                            type="color"
-                            value={newMoodColor}
-                            onChange={(e) => setNewMoodColor(e.target.value)}
-                        />
-                        <button onClick={addCustomMood}>Save Mood</button>
+                        <div className="mood-editor">
+                            <div className="form-group">
+                                <label htmlFor="moodName">Mood Name</label>
+                                <input
+                                    id="moodName"
+                                    type="text"
+                                    placeholder="Enter mood name"
+                                    value={newMoodName}
+                                    onChange={(e) => setNewMoodName(e.target.value)}
+                                    className="input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="moodColor">Mood Color</label>
+                                <div className="color-picker">
+                                    <input
+                                        id="moodColor"
+                                        type="color"
+                                        value={newMoodColor}
+                                        onChange={(e) => setNewMoodColor(e.target.value)}
+                                        className="color-input"
+                                    />
+                                    <div
+                                        className="color-preview"
+                                        style={{ backgroundColor: newMoodColor }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={addCustomMood} className="save-button">
+                            Save Mood
+                        </button>
+                        <button
+                            onClick={() => setIsMoodEditorOpen(false)}
+                            className="cancel-button"
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             )}
+
 
             <button className="settings-icon" onClick={navigateToSettings}>
                 ⚙️
